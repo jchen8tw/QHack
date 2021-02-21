@@ -40,8 +40,8 @@ def optimize_circuit(params):
     # Minimize the circuit
     # Using default params
     var = params
-    opt = AdamOptimizer()
-    for it in range(1000):
+    opt = AdamOptimizer(stepsize=0.01)
+    for it in range(250):
         var, optimal_value = opt.step_and_cost(circuit, var)
     #    print("Iter: {:5d} | Cost: {:0.7f} ".format(it, optimal_value))
     # print(circuit.draw())
