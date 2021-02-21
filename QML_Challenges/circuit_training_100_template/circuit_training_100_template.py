@@ -2,6 +2,7 @@
 import sys
 import pennylane as qml
 from pennylane import numpy as np
+from pennylane.optimize import AdamOptimizer
 
 # DO NOT MODIFY any of these parameters
 WIRES = 2
@@ -31,12 +32,19 @@ def optimize_circuit(params):
 
     # Initialize the device
     # dev = ...
+    dev = qml.device('default.qubit', wires=2)
 
     # Instantiate the QNode
     # circuit = qml.QNode(variational_circuit, dev)
-
+    circuit = qml.QNode(variational_circuit, dev)
     # Minimize the circuit
-
+    # Using default params
+    var = params
+    opt = AdamOptimizer()
+    for it in range(500):
+        var, optimal_value = opt.step_and_cost(circuit, var)
+    #    print("Iter: {:5d} | Cost: {:0.7f} ".format(it, optimal_value))
+    # print(circuit.draw())
     # QHACK #
 
     # Return the value of the minimized QNode
@@ -68,7 +76,8 @@ if __name__ == "__main__":
     # Load and process Hamiltonian data
     hamiltonian = sys.stdin.read()
     hamiltonian = hamiltonian.split(",")
-    hamiltonian = np.array(hamiltonian, float).reshape((2 ** WIRES, 2 ** WIRES))
+    hamiltonian = np.array(hamiltonian, float).reshape(
+        (2 ** WIRES, 2 ** WIRES))
 
     # Generate random initial parameters
     np.random.seed(1967)
