@@ -39,6 +39,8 @@ def parameter_shift(weights):
 
     # QHACK #
     #
+    dcircuit = qml.grad(circuit)
+    gradient = dcircuit(weights)
     # QHACK #
 
     return gradient
